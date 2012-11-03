@@ -672,10 +672,6 @@ inline NSString * AFResourceIdentifierFromReferenceObject(id referenceObject) {
                     [mutableAttributeValues removeObjectForKey:kAFIncrementalStoreLastModifiedAttributeName];
                     [managedObject setValuesForKeysWithDictionary:mutableAttributeValues];
                     
-                    id observer = [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification object:childContext queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-                        [context mergeChangesFromContextDidSaveNotification:note];
-                    }];
-                    
                     [backingContext performBlockAndWait:^{
                         NSManagedObjectID *backingObjectID = [self objectIDForBackingObjectForEntity:[objectID entity] withResourceIdentifier:AFResourceIdentifierFromReferenceObject([self referenceObjectForObjectID:objectID])];
                         NSManagedObject *backingObject = [[self backingManagedObjectContext] existingObjectWithID:backingObjectID error:nil];
@@ -695,8 +691,6 @@ inline NSString * AFResourceIdentifierFromReferenceObject(id referenceObject) {
                             @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[*error localizedFailureReason] userInfo:[NSDictionary dictionaryWithObject:*error forKey:NSUnderlyingErrorKey]];
                         }
                     }];
-                    
-                    [[NSNotificationCenter defaultCenter] removeObserver:observer];
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                     NSLog(@"Error: %@, %@", operation, error);
                 }];
@@ -739,10 +733,6 @@ inline NSString * AFResourceIdentifierFromReferenceObject(id referenceObject) {
                             [managedObject setValue:[managedObjects lastObject] forKey:relationship.name];
                         }
                         
-                        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification object:childContext queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-                            [context mergeChangesFromContextDidSaveNotification:note];
-                        }];
-                        
                         NSManagedObjectID *backingObjectID = [self objectIDForBackingObjectForEntity:[objectID entity] withResourceIdentifier:AFResourceIdentifierFromReferenceObject([self referenceObjectForObjectID:objectID])];
                         if (backingObjectID) {
                             [[self backingManagedObjectContext] performBlockAndWait:^{
@@ -765,8 +755,6 @@ inline NSString * AFResourceIdentifierFromReferenceObject(id referenceObject) {
                         if (![childContext save:error]) {
                             @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[*error localizedFailureReason] userInfo:[NSDictionary dictionaryWithObject:*error forKey:NSUnderlyingErrorKey]];
                         }
-                        
-                        [[NSNotificationCenter defaultCenter] removeObserver:observer];
                     }];
                 }];
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
