@@ -244,7 +244,7 @@ inline NSString * AFResourceIdentifierFromReferenceObject(id referenceObject) {
             
             [managedObject setValuesForKeysWithDictionary:attributes];
             
-            NSManagedObjectID *backingObjectID = [self objectIDForBackingObjectForEntity:entity withResourceIdentifier:resourceIdentifier];
+            NSManagedObjectID *backingObjectID = [self objectIDForBackingObjectForEntity:entity withResourceIdentifier:AFResourceIdentifierFromReferenceObject(resourceIdentifier)];
             __block NSManagedObject *backingObject = nil;
             [backingContext performBlockAndWait:^{
                 if (backingObjectID) {
@@ -876,6 +876,5 @@ inline NSString * AFResourceIdentifierFromReferenceObject(id referenceObject) {
     [backingObject setValuesForKeysWithDictionary:[managedObject dictionaryWithValuesForKeys:attributeKeys.allKeys]];
     [backingObject setValuesForKeysWithDictionary:relationships];
 }
-
 
 @end
