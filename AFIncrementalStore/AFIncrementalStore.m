@@ -851,7 +851,7 @@ inline NSString * AFResourceIdentifierFromReferenceObject(id referenceObject) {
                                              [[NSMutableSet alloc] initWithCapacity:[relationshipObject count]]);
             for (NSManagedObject *relationship in relationshipObject) {
                 NSManagedObjectID *backingRelationshipID = [self objectIDForBackingObjectForEntity:relationshipDescrption.entity
-                                                                            withResourceIdentifier:[self referenceObjectForObjectID:relationship.objectID]];
+                                                                            withResourceIdentifier:AFResourceIdentifierFromReferenceObject([self referenceObjectForObjectID:relationship.objectID])];
                 if (backingRelationshipID) {
                     NSManagedObject *backingRelationshipObject = [backingObject.managedObjectContext existingObjectWithID:backingRelationshipID
                                                                                                                     error:NULL];
@@ -864,7 +864,7 @@ inline NSString * AFResourceIdentifierFromReferenceObject(id referenceObject) {
             [backingObject setValue:backingRelationshipObjects forKey:relationshipName];
         } else {
             NSManagedObjectID *backingRelationshipID = [self objectIDForBackingObjectForEntity:relationshipDescrption.entity
-                                                                        withResourceIdentifier:[self referenceObjectForObjectID:[relationshipObject objectID]]];
+                                                                        withResourceIdentifier:AFResourceIdentifierFromReferenceObject([self referenceObjectForObjectID:[relationshipObject objectID]])];
             if (backingRelationshipID) {
                 NSManagedObject *backingRelationshipObject = [backingObject.managedObjectContext existingObjectWithID:backingRelationshipID
                                                                                                                 error:NULL];
